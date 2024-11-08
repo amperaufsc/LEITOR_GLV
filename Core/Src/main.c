@@ -48,7 +48,8 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 int isInterrupt = 0;
-uint16_t adcVal = 0;
+uint16_t adcVal = 0, lvVoltage = 0;
+float voltage = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -67,6 +68,11 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) //função de tratamento
 float adcVoltageConversion(float volt, uint32_t adc_value){
 	float v = (3.3*adc_value)/4095 ;
 	return v;
+}
+
+uint16_t readTwelve(float v){
+	uint16_t x = (v*12)/3;
+	return x;
 }
 /* USER CODE END PFP */
 
@@ -122,9 +128,11 @@ int main(void)
   while (1) {
 	   if (isInterrupt == 1) {
 	   adcVal = HAL_ADC_GetValue(&hadc1);
-	   float voltage = adcVoltageConversion(adcVal);
+	   voltage = adcVoltageConversion(adcVal);
+	   lvVoltage = readTwelve(volatge);
 	   HAL_Delay(100);
 	   isInterrupt = 0;
+
 	   }
   }
   /* USER CODE END 3 */
