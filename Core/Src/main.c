@@ -20,7 +20,6 @@
 #include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
 
@@ -48,7 +47,8 @@ CAN_HandleTypeDef hcan;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-
+int isInterrupt = 0;
+uint16_t adcVal = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -59,11 +59,22 @@ static void MX_USART2_UART_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_CAN_Init(void);
 /* USER CODE BEGIN PFP */
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) //função de tratamento
+{
+  isInterrupt = 1;
+}
 
+float adcVoltageConversion(float volt, uint32_t adc_value){
+	float v = (3.3*adc_value)/4095 ;
+	return v;
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+  /*If continuousconversion mode is DISABLED uncomment below*/
+//HAL_ADC_Start_IT (&hadc1);
 
 /* USER CODE END 0 */
 
@@ -101,19 +112,23 @@ int main(void)
   MX_ADC1_Init();
   MX_CAN_Init();
   /* USER CODE BEGIN 2 */
-
+  HAL_ADC_Start_IT (&hadc1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-    /* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
+    /* USER CODE END WHILE */
+  while (1) {
+	   if (isInterrupt == 1) {
+	   adcVal = HAL_ADC_GetValue(&hadc1);
+	   float voltage = adcVoltageConversion(adcVal);
+	   HAL_Delay(100);
+	   isInterrupt = 0;
+	   }
   }
   /* USER CODE END 3 */
-}
+
 
 /**
   * @brief System Clock Configuration
