@@ -123,8 +123,6 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-
-    /* USER CODE END WHILE */
   while (1) {
 	   if (isInterrupt == 1) {
 	   adcVal = HAL_ADC_GetValue(&hadc1);
@@ -135,6 +133,8 @@ int main(void)
 
 	   }
   }
+    /* USER CODE END WHILE */
+
   /* USER CODE END 3 */
 
 
