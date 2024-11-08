@@ -65,7 +65,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) //função de tratamento
   isInterrupt = 1;
 }
 
-float adcVoltageConversion(float volt, uint32_t adc_value){
+float adcVoltageConversion(uint32_t adc_value){
 	float v = (3.3*adc_value)/4095 ;
 	return v;
 }
@@ -129,7 +129,7 @@ int main(void)
 	   if (isInterrupt == 1) {
 	   adcVal = HAL_ADC_GetValue(&hadc1);
 	   voltage = adcVoltageConversion(adcVal);
-	   lvVoltage = readTwelve(volatge);
+	   lvVoltage = readTwelve(voltage);
 	   HAL_Delay(100);
 	   isInterrupt = 0;
 
